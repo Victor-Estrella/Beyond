@@ -1,0 +1,151 @@
+.opening {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+
+.lockup {
+  display: grid;
+  justify-items: center;
+  gap: clamp(1.1rem, 3vh, 2.4rem);
+  /* Sits a touch above centre, where the eye expects a title. */
+  margin-top: -4vh;
+}
+
+.title {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-weight: 200;
+  font-size: clamp(3rem, 13.5vw, 14.5rem);
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  will-change: transform;
+}
+
+/* Tracking is done with margins so the word stays optically centred. */
+.title [data-char] {
+  margin: 0 0.13em;
+}
+
+.subtitle {
+  margin: 0;
+  /* Offsets the trailing letter-space so the line is truly centred. */
+  padding-left: 0.62em;
+  font-size: clamp(0.56rem, 0.98vw, 0.92rem);
+  font-weight: 400;
+  letter-spacing: 0.62em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.hintIntro {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: clamp(1.5rem, 5vh, 3.25rem);
+  display: grid;
+  justify-items: center;
+}
+
+.hint {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  padding-left: 0.5em;
+  font-size: 0.62rem;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+.hintLine {
+  position: relative;
+  width: 1px;
+  height: clamp(2.2rem, 6vh, 3.5rem);
+  overflow: hidden;
+  background: var(--ink-faint);
+}
+
+.hintLine::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform: translateY(-100%);
+  animation: hintDrop 2.4s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@keyframes hintDrop {
+  0% {
+    transform: translateY(-100%);
+  }
+  55%,
+  100% {
+    transform: translateY(100%);
+  }
+}
+
+/*
+ * Entrance, played once when loading finishes. It lives on wrapper elements so it
+ * never competes with the scroll-driven animation of the elements inside them.
+ */
+.introChar {
+  display: inline-block;
+  transition:
+    opacity 1.8s cubic-bezier(0.2, 0.6, 0.2, 1),
+    filter 1.8s cubic-bezier(0.2, 0.6, 0.2, 1),
+    transform 2.2s cubic-bezier(0.2, 0.6, 0.2, 1);
+  transition-delay: calc(0.45s + var(--i) * 0.11s);
+}
+
+.subtitleIntro,
+.hintIntro {
+  transition: opacity 1.6s ease;
+}
+
+.subtitleIntro {
+  transition-delay: 1.5s;
+}
+
+.hintIntro {
+  transition-delay: 2.4s;
+}
+
+[data-ready="false"] .introChar {
+  opacity: 0;
+  filter: blur(14px);
+  transform: translateY(0.18em) scale(1.08);
+}
+
+[data-ready="false"] .subtitleIntro,
+[data-ready="false"] .hintIntro {
+  opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .introChar {
+    transition: opacity 1s ease;
+    transition-delay: 0.2s;
+  }
+
+  [data-ready="false"] .introChar {
+    filter: none;
+    transform: none;
+  }
+
+  .hintLine::after {
+    animation: none;
+    transform: none;
+    opacity: 0.6;
+  }
+}
+
+[data-render="true"] .hintIntro {
+  display: none;
+}

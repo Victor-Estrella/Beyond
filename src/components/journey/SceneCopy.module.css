@@ -1,0 +1,135 @@
+.copy {
+  position: absolute;
+  z-index: 2;
+  /* Shown and hidden by the timeline. */
+  visibility: hidden;
+  width: min(100% - 2 * var(--gutter), 44rem);
+  pointer-events: none;
+  --accent: var(--cold);
+}
+
+.inner {
+  position: relative;
+  will-change: transform, opacity;
+}
+
+/* A soft pool of shadow keeps the words readable without boxing them in. */
+.inner::before {
+  content: "";
+  position: absolute;
+  inset: -45% -30%;
+  z-index: -1;
+  background: radial-gradient(closest-side, rgb(2 2 7 / 0.58), rgb(2 2 7 / 0.28) 55%, transparent);
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.9em;
+  margin: 0 0 clamp(0.9rem, 2.2vh, 1.6rem);
+  font-size: clamp(0.58rem, 0.8vw, 0.74rem);
+  font-weight: 500;
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--ink);
+  opacity: 0.85;
+  text-shadow: 0 0 0.8rem rgb(0 0 0 / 0.9), 0 0 2rem rgb(0 0 0 / 0.6);
+}
+
+.rule {
+  width: 2.6em;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.9;
+}
+
+.line {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-weight: 400;
+  font-size: clamp(2.3rem, 5.6vw, 6rem);
+  line-height: 1.02;
+  letter-spacing: -0.012em;
+  text-wrap: balance;
+  text-shadow: 0 0 2.5rem rgb(0 0 0 / 0.45);
+}
+
+/* Placement: each line sits in the quietest part of its picture, away from the subject. */
+.copy[data-copy="1"] {
+  left: var(--gutter);
+  bottom: 15vh;
+  --accent: var(--cold);
+}
+
+.copy[data-copy="2"] {
+  left: 50%;
+  bottom: 13vh;
+  translate: -50% 0;
+  text-align: center;
+  --accent: var(--violet);
+}
+
+.copy[data-copy="2"] .line {
+  font-size: clamp(2.5rem, 6.4vw, 7rem);
+}
+
+.copy[data-copy="3"] {
+  left: var(--gutter);
+  top: 21vh;
+  width: min(100% - 2 * var(--gutter), 36rem);
+  --accent: var(--warm);
+}
+
+.copy[data-copy="4"] {
+  left: var(--gutter);
+  bottom: 15vh;
+  width: min(100% - 2 * var(--gutter), 38rem);
+  --accent: var(--warm);
+}
+
+.copy[data-copy="5"] {
+  /* Leaves room for the progress rail. */
+  right: calc(var(--gutter) + 2.75rem);
+  top: 19vh;
+  width: min(100% - 2 * var(--gutter), 30rem);
+  text-align: right;
+  --accent: var(--gold);
+}
+
+/* Portrait and small screens: the black hole takes the middle, so words keep to the edges. */
+@media (max-width: 760px), (orientation: portrait) {
+  .copy[data-copy] {
+    left: var(--gutter);
+    right: auto;
+    top: auto;
+    bottom: 15vh;
+    bottom: 15svh;
+    translate: none;
+    width: calc(100% - 2 * var(--gutter));
+    text-align: left;
+  }
+
+  .copy[data-copy="5"] {
+    top: 12vh;
+    top: 12svh;
+    bottom: auto;
+    text-align: right;
+  }
+
+  .line,
+  .copy[data-copy="2"] .line {
+    font-size: clamp(2.3rem, 11.5vw, 4.6rem);
+  }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .line,
+  .copy[data-copy="2"] .line {
+    font-size: clamp(1.8rem, 9vh, 3.2rem);
+  }
+
+  .copy[data-copy="3"],
+  .copy[data-copy="5"] {
+    top: 16vh;
+  }
+}

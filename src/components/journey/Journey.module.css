@@ -1,0 +1,62 @@
+/*
+ * The track's height is the length of the journey: the taller it is, the more
+ * scrolling each scene takes. `svh` keeps that length stable on phones, where
+ * the browser's toolbars slide in and out while scrolling.
+ */
+.track {
+  position: relative;
+  height: 950vh;
+  height: 950svh;
+}
+
+/* Pinned for the whole journey. `dvh` makes it fill the screen whatever the toolbars do. */
+.stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  isolation: isolate;
+  background: #000;
+}
+
+.canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+/* Used only where WebGL 2 is unavailable. */
+.fallback {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.fallback :global(img) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  user-select: none;
+  will-change: transform, opacity;
+}
+
+.fallback::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: radial-gradient(ellipse at center, transparent 45%, rgb(0 0 0 / 0.6));
+}
+
+@media (max-width: 760px) {
+  /* Touch scrolling covers less ground per gesture, so the journey is a little shorter. */
+  .track {
+    height: 800vh;
+    height: 800svh;
+  }
+}

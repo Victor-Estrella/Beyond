@@ -1,0 +1,56 @@
+.preloader {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 1.4rem;
+  background: var(--void);
+  transition:
+    opacity 1.4s ease 0.15s,
+    visibility 0s linear 1.6s;
+}
+
+.preloader[data-done="true"] {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.bar {
+  position: relative;
+  width: clamp(5rem, 14vw, 9rem);
+  height: 1px;
+  overflow: hidden;
+  background: var(--ink-faint);
+}
+
+.fill {
+  position: absolute;
+  inset: 0;
+  background: var(--ink);
+  transform-origin: left;
+  transition: transform 0.7s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+.caption {
+  padding-left: 0.5em;
+  font-size: 0.58rem;
+  font-weight: 400;
+  letter-spacing: 0.5em;
+  text-transform: uppercase;
+  color: var(--ink-dim);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .preloader {
+    transition:
+      opacity 0.4s ease,
+      visibility 0s linear 0.4s;
+  }
+
+  .fill {
+    transition: none;
+  }
+}

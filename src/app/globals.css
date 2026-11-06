@@ -1,0 +1,59 @@
+:root {
+  --void: #020207;
+  --ink: #f4efe8;
+  --ink-dim: rgb(244 239 232 / 0.64);
+  --ink-faint: rgb(244 239 232 / 0.3);
+
+  /* Deep space: blue and violet. The black hole: orange and gold. */
+  --cold: #9db8ff;
+  --violet: #c0a6ff;
+  --warm: #ffb46b;
+  --gold: #ffd9a0;
+
+  --gutter: clamp(1.25rem, 4.6vw, 4.75rem);
+
+  color-scheme: dark;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--void);
+  /* The progress rail replaces the scrollbar. */
+  scrollbar-width: none;
+  -webkit-text-size-adjust: 100%;
+}
+
+html::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  margin: 0;
+  background: var(--void);
+  color: var(--ink);
+  font-family: var(--font-sans), "Helvetica Neue", Arial, sans-serif;
+  font-weight: 300;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overscroll-behavior-y: none;
+}
+
+/* Offline rendering: a frame must depend only on the requested progress and time. */
+[data-render="true"],
+[data-render="true"] *,
+[data-render="true"] *::before,
+[data-render="true"] *::after {
+  animation: none !important;
+  transition: none !important;
+}
+
+::selection {
+  background: rgb(157 184 255 / 0.3);
+  color: var(--ink);
+}

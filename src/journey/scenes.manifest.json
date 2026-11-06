@@ -1,0 +1,140 @@
+[
+  {
+    "id": "scene-01-the-void",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-01-the-void.full.d565ae10.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 110986
+    },
+    "lite": {
+      "src": "/scenes/scene-01-the-void.lite.f605478d.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 40158
+    },
+    "depth": {
+      "src": "/scenes/scene-01-the-void.depth.a361c7c3.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 4526
+    }
+  },
+  {
+    "id": "scene-02-entering-the-nebula",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-02-entering-the-nebula.full.99d339f8.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 259192
+    },
+    "lite": {
+      "src": "/scenes/scene-02-entering-the-nebula.lite.9fad29d2.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 110050
+    },
+    "depth": {
+      "src": "/scenes/scene-02-entering-the-nebula.depth.6522cae4.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 4300
+    }
+  },
+  {
+    "id": "scene-03-through-the-nebula",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-03-through-the-nebula.full.9fa2e31c.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 283868
+    },
+    "lite": {
+      "src": "/scenes/scene-03-through-the-nebula.lite.7dd29fdc.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 119068
+    },
+    "depth": {
+      "src": "/scenes/scene-03-through-the-nebula.depth.9f73ab42.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 4272
+    }
+  },
+  {
+    "id": "scene-04-distortion-ahead",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-04-distortion-ahead.full.0c7a72f8.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 302278
+    },
+    "lite": {
+      "src": "/scenes/scene-04-distortion-ahead.lite.a0a204c0.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 124528
+    },
+    "depth": {
+      "src": "/scenes/scene-04-distortion-ahead.depth.d9929cef.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 3892
+    }
+  },
+  {
+    "id": "scene-05-black-hole-reveal",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-05-black-hole-reveal.full.162733e5.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 319880
+    },
+    "lite": {
+      "src": "/scenes/scene-05-black-hole-reveal.lite.f342e854.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 131570
+    },
+    "depth": {
+      "src": "/scenes/scene-05-black-hole-reveal.depth.765d4d43.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 4308
+    }
+  },
+  {
+    "id": "scene-06-event-horizon",
+    "width": 1672,
+    "height": 941,
+    "full": {
+      "src": "/scenes/scene-06-event-horizon.full.323a4285.webp",
+      "width": 1672,
+      "height": 941,
+      "bytes": 231292
+    },
+    "lite": {
+      "src": "/scenes/scene-06-event-horizon.lite.daeb3dfc.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 99406
+    },
+    "depth": {
+      "src": "/scenes/scene-06-event-horizon.depth.02bb813b.webp",
+      "width": 1024,
+      "height": 576,
+      "bytes": 3744
+    }
+  }
+]
