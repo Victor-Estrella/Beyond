@@ -84,6 +84,7 @@ export function startJourney(options: JourneyOptions): JourneyHandle {
     delta: 0,
     pointerX: 0,
     pointerY: 0,
+    pointerActive: false,
     velocity: 0,
     intro: 0,
     calm,
@@ -125,6 +126,7 @@ export function startJourney(options: JourneyOptions): JourneyHandle {
   let pointerTargetY = 0;
   const onPointerMove = (event: PointerEvent) => {
     if (calm || event.pointerType !== "mouse") return;
+    frame.pointerActive = true;
     pointerTargetX = (event.clientX / window.innerWidth) * 2 - 1;
     pointerTargetY = (event.clientY / window.innerHeight) * 2 - 1;
   };
@@ -264,6 +266,7 @@ function startRendering(options: JourneyOptions, state: JourneyState, stage: Sta
     delta: 0,
     pointerX: 0,
     pointerY: 0,
+    pointerActive: false,
     velocity: 0,
     intro: 1,
     calm,

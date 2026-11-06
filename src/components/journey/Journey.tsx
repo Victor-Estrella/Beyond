@@ -4,6 +4,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { useReducedMotion } from "@/hooks/useReducedMotion";
 import { startJourney, type JourneyHandle } from "@/journey/controller";
 import { scenes } from "@/journey/scenes";
+import { Cursor } from "./Cursor";
 import { Finale } from "./Finale";
 import { Hud } from "./Hud";
 import { Opening } from "./Opening";
@@ -80,6 +81,7 @@ export default function Journey() {
         <Hud scene={scene} progressRef={progressRef} onNavigate={goToScene} />
         <Preloader progress={loadProgress} done={ready} />
       </div>
+      <Cursor />
     </div>
   );
 }

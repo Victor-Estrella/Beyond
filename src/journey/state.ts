@@ -119,6 +119,8 @@ export interface Frame {
   /** Smoothed pointer position, −1…1 on both axes (0 on touch devices). */
   pointerX: number;
   pointerY: number;
+  /** Whether a mouse pointer has been seen (false on touch devices and offline). */
+  pointerActive: boolean;
   /** Smoothed scroll speed in timeline-lengths per second (signed). */
   velocity: number;
   /** 0–1: the opening fade from black, played once after loading. */

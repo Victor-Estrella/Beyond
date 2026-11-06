@@ -29,6 +29,7 @@ layout(location = 0) in vec2 aGrid;   // 0…1 across the plane
 
 uniform sampler2D uDepth;             // 1 = near, 0 = far
 uniform vec3 uCamera;                 // world position; the camera looks down +z
+uniform mat3 uRotation;               // world → camera: the camera's tilt, pan and roll
 uniform vec2 uProjection;             // (f / aspect, f), f = 1 / tan(fov / 2)
 uniform float uPlaneZ;                // where the far plane of this picture sits
 uniform vec2 uPlaneSize;              // picture size in world units (height = 1)
@@ -43,7 +44,7 @@ void main() {
   vec2 uv = mix(vec2(-uMargin), vec2(1.0 + uMargin), aGrid);
   float depth = texture(uDepth, uv).r;
   vec3 world = vec3((uv.x - 0.5) * uPlaneSize.x, (0.5 - uv.y) * uPlaneSize.y, uPlaneZ - depth * uRelief);
-  vec3 view = world - uCamera;
+  vec3 view = uRotation * (world - uCamera);
   vUv = uv;
   vDepth = depth;
   vDist = view.z;
@@ -63,9 +64,16 @@ uniform sampler2D uTex;
 uniform float uFade;        // 0–1 while the picture is still loading in
 uniform float uMargin;
 uniform vec2 uFog;          // distances where the picture starts and finishes fading into the dark
-uniform float uDissolve;    // 0–1: the picture gives way to the one behind it, far parts first
 uniform float uTime;
 uniform vec2 uResolution;
+
+// The portal: a circle opening around the vanishing point, through which the
+// next picture is seen. uMix runs the clock; the field is the same one the post
+// pass uses for the portal's rim, so the two always line up.
+uniform float uPortal;      // 1 = this picture is cut by the portal
+uniform float uMix;
+uniform vec3 uMask;         // radial, noise, feather
+uniform vec2 uOrigin;       // portal centre on screen (0–1 from the top-left)
 
 float hash12(vec2 p) {
   vec3 p3 = fract(vec3(p.xyx) * 0.1031);
@@ -105,11 +113,18 @@ void main() {
   // Distant pictures sit in the dark until the camera comes closer.
   float fog = 1.0 - smoothstep(uFog.x, uFog.y, vDist);
 
-  // Dissolve: the far sky goes first, the near rocks stay until they have swept past.
-  float n = clouds(gl_FragCoord.xy / uResolution.y * 2.4 + uTime * 0.01);
-  float arrival = vDepth * 0.72 + n * 0.28;
-  float clock = mix(-0.3, 1.3, uDissolve);
-  float keep = 1.0 - smoothstep(arrival - 0.3, arrival + 0.3, clock);
+  float keep = 1.0;
+  if (uPortal > 0.5 && uMix > 0.0) {
+    vec2 aspect = vec2(uResolution.x / uResolution.y, 1.0);
+    vec2 screen = vec2(gl_FragCoord.x / uResolution.x, 1.0 - gl_FragCoord.y / uResolution.y);
+    vec2 fromOrigin = (screen - uOrigin) * aspect;
+    float radial = length(fromOrigin) / length(max(uOrigin, 1.0 - uOrigin) * aspect);
+    float noise = clouds(screen * aspect * 2.6 + vec2(uTime * 0.015, 0.0));
+    float arrival = (radial * uMask.x + noise * uMask.y) / (uMask.x + uMask.y + 1e-4);
+    float feather = uMask.z;
+    float clock = mix(-feather, 1.0 + feather, uMix);
+    keep = 1.0 - smoothstep(arrival - feather, arrival + feather, clock);
+  }
 
   fragColor = vec4(color * fog, edge * keep);
 }`;
@@ -152,6 +167,8 @@ uniform float uAberration;
 uniform vec2 uGravity;
 uniform float uReach;
 uniform float uLens;
+uniform vec2 uPointer;        // on screen (0–1 from the top-left)
+uniform float uPointerLens;   // space bends a little where you point
 uniform float uSwirl;
 uniform float uSwirlPhase;
 uniform float uGlow;
@@ -271,8 +288,17 @@ void main() {
     swirl = uSwirl * 0.2 * smoothstep(1.1, 0.12, g);
   }
 
-  // The advancing edge of a transition bends the view like a lens passing over it.
+  // A small lens follows the pointer.
+  if (uPointerLens > 0.001) {
+    vec2 toPointer = (s - uPointer) * aspect;
+    float pd = length(toPointer);
+    float q = pd / 0.28;
+    s -= toPointer / max(pd, 1e-4) * q * exp(-3.0 * q * q) * 0.03 * uPointerLens / aspect;
+  }
+
+  // The portal's rim bends the view like a lens, and echoes outwards in thin rings.
   float front = 0.0;
+  float echo = 0.0;
   if (uMix > 0.0 && uMix < 1.0 && uRefract + length(uFrontGlow) > 0.001) {
     vec2 fromOrigin = (screen - uOrigin) * aspect;
     float originDist = length(fromOrigin);
@@ -282,15 +308,20 @@ void main() {
     float feather = uMask.z;
     float clock = mix(-feather, 1.0 + feather, uMix);
     float arrival = (radial * uMask.x + noise * uMask.y) / total;
-    front = exp(-pow((clock - arrival) / (0.6 * feather + 0.02), 2.0));
-    s += (fromOrigin / max(originDist, 1e-4)) * front * uRefract * 0.035 / aspect;
+    float away = clock - arrival;
+    front = exp(-pow(away / (0.6 * feather + 0.02), 2.0));
+    // Two fainter rings run ahead of the rim, fading as the portal opens up.
+    float ringA = exp(-pow((away + 0.09) / 0.006, 2.0));
+    float ringB = exp(-pow((away + 0.2) / 0.005, 2.0));
+    echo = (ringA * 0.5 + ringB * 0.25) * (1.0 - smoothstep(0.6, 1.0, uMix)) * smoothstep(0.0, 0.1, uMix);
+    s += (fromOrigin / max(originDist, 1e-4)) * front * uRefract * 0.04 / aspect;
   }
 
   float jitter = fract(52.9829189 * fract(dot(gl_FragCoord.xy, vec2(0.06711056, 0.00583715))) + uTime * 3.7);
   vec3 color = readScene(s, jitter, swirl, aspect);
 
-  // Light spills along the front, but only where there is light to carry it.
-  color += uFrontGlow * front * 0.18 * (0.3 + luma(color));
+  // The rim glows, brightest where the picture behind it has light to carry; the echoes stay thin.
+  color += uFrontGlow * (front * 0.45 * (0.25 + luma(color)) + echo * 0.35);
 
   // Procedural gas, lensed like everything else since it is read at the bent
   // coordinate. It stays out of the event horizon.
@@ -456,7 +487,7 @@ void main() {
   xy = fract(xy * 0.5 + 0.5) * 2.0 - 1.0;
 
   vec2 p = xy * 2.4 / depth;
-  p -= uPointer * 0.05 / depth;
+  p -= uPointer * 0.11 / depth;
 
   // Gravity: matter orbits the hole, and the closer it gets the faster it falls in.
   vec2 fromHole = p - uHole.xy;

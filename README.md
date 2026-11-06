@@ -49,9 +49,8 @@ src/
     controller.ts           wires scroll → timeline → state → stage; loading; pointer
     quality.ts              device tiers and the image variant to load
     renderer/
-      WebGLStage.ts         draws a frame: gas pass → scene pass → particles
-      shaders.ts            scene (camera, depth, flow, masks, lensing, blur, grade),
-                            procedural gas, particles
+      WebGLStage.ts         draws a frame: gas → relief meshes → post pass → particles
+      shaders.ts            relief mesh, post (lens, blur, flow, grade), gas, particles
       textures.ts           on-demand picture loading with fade-in
       particles.ts          stateless star / dust / bokeh field (6000 points)
       DomStage.ts           <img> fallback when WebGL 2 is unavailable
@@ -82,18 +81,24 @@ distance from the vanishing point, a cloud pattern, and the brightness of the
 incoming picture — so the nebula seeps in organically while the black hole
 sweeps across the frame as a lens wave. Recipes live in `scenes.ts`.
 
-### Images and depth
+### A flight through reliefs
 
-The pictures are only ever scaled uniformly and cropped (cover fit), never
-stretched. On narrow screens the crop is centred on each scene's focus point so
-the subject stays in frame. Scenes load on demand, two ahead of the viewer.
+Each picture has an estimated depth map (`npm run depth`) and is drawn as a
+relief: a 160 × 90 grid pushed towards the camera by that depth. One
+perspective camera flies forward through all six, their far planes spaced along
+the flight path so that leaving one at its final zoom puts the camera exactly
+where the next one's arrival expects it. Near matter sweeps past the lens while
+the distant light barely moves; as the camera gets close, the picture's far
+regions dissolve (sky first, rocks last) and the next picture grows out of the
+dark behind them. The timeline's 2D camera values (zoom, focus, centring) are
+mapped onto this camera exactly, so framing on every screen size is unchanged.
 
-Each picture has an estimated depth map. The renderer treats it as a relief:
-near matter slides with the pointer and the camera's sway and grows faster as
-the camera pushes in, while the distant light barely moves; far particles are
-hidden behind the picture's foreground. Gas is moved along a slow current with
-a flow map (two phase-shifted reads cross-faded), so it drifts without ever
-snapping back; the accretion disc turns the same way.
+The composed scene then goes through a post pass: gravitational bending, the
+transition's refraction front, motion blur with chromatic fringes, gas drift
+along a slow current (a flow map: two phase-shifted reads cross-faded, so it
+never snaps back), the procedural nebula, the glow around the hole, and the
+grade. Pictures are only ever scaled uniformly and cropped, never stretched;
+on narrow screens the crop is centred on each scene's focus point.
 
 ### Ambient layers
 

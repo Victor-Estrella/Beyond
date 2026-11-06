@@ -31,9 +31,11 @@ export interface SceneDef {
   reach: number;
   /** Radius of the black hole's dark disc, as a fraction of the picture's height (0 = not visible). */
   horizon: number;
+  /** How strongly this picture's depth is exaggerated (1 = default). */
+  relief: number;
 }
 
-const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach" | "horizon">> = [
+const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach" | "horizon" | "relief">> = [
   {
     title: "The Void",
     line: "",
@@ -41,6 +43,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.775, 0.365],
     reach: 0.55,
     horizon: 0,
+    relief: 0.55,
   },
   {
     title: "Entering the Nebula",
@@ -49,6 +52,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.775, 0.365],
     reach: 0.55,
     horizon: 0,
+    relief: 1,
   },
   {
     title: "Through the Nebula",
@@ -57,6 +61,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.775, 0.365],
     reach: 0.55,
     horizon: 0,
+    relief: 1,
   },
   {
     title: "Distortion Ahead",
@@ -65,6 +70,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.775, 0.365],
     reach: 0.55,
     horizon: 0.105,
+    relief: 0.9,
   },
   {
     title: "Black Hole Reveal",
@@ -73,6 +79,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.625, 0.4],
     reach: 0.8,
     horizon: 0.165,
+    relief: 0.85,
   },
   {
     title: "Event Horizon",
@@ -81,6 +88,7 @@ const copy: Array<Pick<SceneDef, "title" | "line" | "focus" | "gravity" | "reach
     gravity: [0.8, 0.3],
     reach: 1.5,
     horizon: 0.46,
+    relief: 0.9,
   },
 ];
 
@@ -132,14 +140,14 @@ export interface TransitionDef {
 }
 
 export const transitions: TransitionDef[] = [
-  // The Void → Entering the Nebula: the nebula opens up from the distant glow.
-  { radial: 0.55, noise: 0.45, luma: 0.35, feather: 0.34, refract: 0, glow: [0.25, 0.35, 0.9] },
-  // Entering → Through the Nebula: clouds dissolve into deeper clouds.
-  { radial: 0.2, noise: 0.7, luma: 0.5, feather: 0.3, refract: 0, glow: [0.45, 0.3, 0.9] },
-  // Through the Nebula → Distortion Ahead: a gravitational wave sweeps the frame.
-  { radial: 1, noise: 0.14, luma: 0.1, feather: 0.11, refract: 1, glow: [0.9, 0.55, 0.3] },
-  // Distortion Ahead → Black Hole Reveal: the horizon swallows the view.
-  { radial: 1, noise: 0.1, luma: 0.2, feather: 0.2, refract: 0.75, glow: [1, 0.62, 0.25] },
-  // Black Hole Reveal → Event Horizon: the plunge.
-  { radial: 0.8, noise: 0.25, luma: 0.25, feather: 0.36, refract: 0.35, glow: [1, 0.7, 0.35] },
+  // The Void → Entering the Nebula: a portal opens in the distant glow, its edge a little ragged.
+  { radial: 0.82, noise: 0.18, luma: 0, feather: 0.1, refract: 0.6, glow: [0.35, 0.5, 1.0] },
+  // Entering → Through the Nebula: the clouds part along a torn, organic edge.
+  { radial: 0.7, noise: 0.3, luma: 0, feather: 0.12, refract: 0.5, glow: [0.6, 0.4, 1.0] },
+  // Through the Nebula → Distortion Ahead: a perfect gravitational lens sweeps the frame.
+  { radial: 1, noise: 0.05, luma: 0, feather: 0.05, refract: 1, glow: [1.0, 0.6, 0.3] },
+  // Distortion Ahead → Black Hole Reveal: the horizon itself is the portal.
+  { radial: 1, noise: 0.04, luma: 0, feather: 0.045, refract: 0.9, glow: [1.0, 0.65, 0.25] },
+  // Black Hole Reveal → Event Horizon: the plunge, edge trembling.
+  { radial: 0.92, noise: 0.08, luma: 0, feather: 0.08, refract: 0.6, glow: [1.0, 0.72, 0.35] },
 ];
